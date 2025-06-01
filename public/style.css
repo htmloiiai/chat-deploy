@@ -1,4 +1,8 @@
 /* ===== 全局樣式 ===== */
+body, html {
+  height: 100%;
+}
+
 body {
   font-family: sans-serif;
   margin: 0;
@@ -268,4 +272,12 @@ a:hover {
   max-width: 300px;
   line-height: 1.6;
   display: none;
+}
+
+.center-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* 垂直置中整個畫面 */
+  background-color: #f5f5f5; /* 可自行換色或移除 */
 }
