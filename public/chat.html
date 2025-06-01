@@ -185,28 +185,29 @@
   </div>
 
   <div class="main-layout">
-    <div class="chat-container">
-      <div class="chat-header">
-        <span>聊天室</span>
-        <div class="chat-user-controls">
-          <span>使用者：<span id="username-display"></span></span>
-          <button onclick="logout()">登出</button>
-        </div>
-      </div>
-      <div id="chat-box"></div>
-      <div class="chat-input">
-        <input type="text" id="message" placeholder="輸入訊息..." autocomplete="off" />
-        <button id="send">送出</button>
-        <div id="command-hint"></div>
+  <div class="chat-container">
+    <div class="chat-header">
+      <span>聊天室</span>
+      <div class="chat-user-controls">
+        <span>使用者：<span id="username-display"></span></span>
+        <button onclick="logout()">登出</button>
       </div>
     </div>
-    <div class="sidebar">
-      <h3>個人檔案</h3>
-      <p><strong>使用者：</strong><span id="profile-username"></span></p>
-      <p><strong>主題：</strong><span id="profile-theme"></span></p>
-      <p><strong>登入時間：</strong><span id="profile-login-time"></span></p>
+    <div id="chat-box"></div>
+    <div class="chat-input">
+      <input type="text" id="message" placeholder="輸入訊息..." autocomplete="off" />
+      <button id="send">送出</button>
+      <div id="command-hint"></div>
     </div>
   </div>
+  <div class="sidebar">
+    <h3>個人檔案</h3>
+    <p><strong>使用者：</strong><span id="profile-username"></span></p>
+    <p><strong>主題：</strong><span id="profile-theme"></span></p>
+    <p><strong>登入時間：</strong><span id="profile-login-time"></span></p>
+  </div>
+</div>
+
 
   <script src="/socket.io/socket.io.js"></script>
   <script>
@@ -379,6 +380,52 @@
     hintBox.style.display = "none";
   }
 });
+
+// chat.html 的 script 中加入：
+const username =
+  localStorage.getItem("chatUser") ||
+  sessionStorage.getItem("chatUser") ||
+  "訪客";
+
+document.getElementById("profile-username").innerText = username;
+
+// 如果未登入自動跳回登入頁
+if (!username || username === "訪客") {
+  window.location.href = "index.html";
+}
+
+window.onload = () => {
+  const username = localStorage.getItem("chatUser") || sessionStorage.getItem("chatUser");
+  const theme = localStorage.getItem("theme") || "light";
+  const loginTime = sessionStorage.getItem("loginTime") || new Date().toLocaleString();
+
+  // 防止未登入者進入聊天室
+  if (!username) {
+    alert("請先登入！");
+    window.location.href = "index.html";
+    return;
+  }
+
+  // 記錄登入時間（只記一次）
+  if (!sessionStorage.getItem("loginTime")) {
+    sessionStorage.setItem("loginTime", loginTime);
+  }
+
+  // 顯示使用者資訊
+  document.getElementById("username-display").innerText = username;
+  document.getElementById("profile-username").innerText = username;
+  document.getElementById("profile-theme").innerText = theme;
+  document.getElementById("profile-login-time").innerText = loginTime;
+};
+
+// 登出功能
+function logout() {
+  localStorage.removeItem("chatUser");
+  sessionStorage.removeItem("chatUser");
+  sessionStorage.removeItem("loginTime");
+  window.location.href = "index.html";
+}
+
 
   </script>
 </body>

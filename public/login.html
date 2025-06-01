@@ -20,24 +20,38 @@
 
   <script>
     // 檢查是否已經登入過
+// 登入邏輯
 function login() {
   const username = document.getElementById("username").value.trim();
   const password = document.getElementById("password").value;
   const remember = document.getElementById("remember").checked;
 
   if (username && password) {
-    // 儲存使用者資訊
+    // 儲存使用者名稱
     if (remember) {
-      localStorage.setItem("chatUser", username); // 長期儲存
+      localStorage.setItem("chatUser", username);
+      sessionStorage.removeItem("chatUser");
     } else {
-      sessionStorage.setItem("chatUser", username); // 僅這次開啟有效
+      sessionStorage.setItem("chatUser", username);
+      localStorage.removeItem("chatUser");
     }
 
+    // 前往聊天室
     window.location.href = "chat.html";
   } else {
     alert("請輸入帳號與密碼");
   }
 }
+
+// 自動填入已記住的帳號
+window.onload = () => {
+  const remembered = localStorage.getItem("chatUser");
+  if (remembered) {
+    document.getElementById("username").value = remembered;
+    document.getElementById("remember").checked = true;
+  }
+};
+
 
 
   </script>
